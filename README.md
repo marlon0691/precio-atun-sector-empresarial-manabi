@@ -11,6 +11,8 @@ Using 1,692 firm-year observations (230 tuna firms in Manabí, Ecuador, 2011–2
 
 ---
 
+**Repositorio:** https://github.com/marlon0691/precio-atun-sector-empresarial-manabi
+
 **Dashboard interactivo:** `dashboard/dashboard_ejecutivo.html` (abre en cualquier navegador) · versión publicada en Claude: https://claude.ai/artifact/DNhaeWaFoARc41XroUxxcV
 
 ## Resumen ejecutivo para gerentes
