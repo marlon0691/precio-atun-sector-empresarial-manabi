@@ -1,0 +1,304 @@
+<title>Atún Manabí: precio y El Niño</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: muelle de Manta — una columna de lectura con tablero de instrumentos; resumen arriba, detalle abajo */
+:root{
+  --bg:#f6f7f6; --panel:#ffffff; --ink:#0f1a1f; --ink2:#4a575c; --muted:#7c878b; --rule:#dfe4e3;
+  --fleet:#eb6834; --plant:#2a78d6; --nino:#e34948; --nina:#2a78d6; --neutro:#a3a29c;
+  --warn:#c98500; --warn-bg:#fff4dc; --good:#1a8f4e; --crit:#c8332f; --crit-bg:#fde8e7;
+  --f-disp:"Archivo","Helvetica Neue",Arial,sans-serif; --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1416; --panel:#151d20; --ink:#eef2f1; --ink2:#b5c0c2; --muted:#87959a; --rule:#26323a;
+  --fleet:#d95926; --plant:#3987e5; --nino:#e66767; --nina:#3987e5; --neutro:#77776f;
+  --warn:#eda100; --warn-bg:#2d2410; --good:#3fbf78; --crit:#e66767; --crit-bg:#3a1a1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1416; --panel:#151d20; --ink:#eef2f1; --ink2:#b5c0c2; --muted:#87959a; --rule:#26323a;
+  --fleet:#d95926; --plant:#3987e5; --nino:#e66767; --nina:#3987e5; --neutro:#77776f;
+  --warn:#eda100; --warn-bg:#2d2410; --good:#3fbf78; --crit:#e66767; --crit-bg:#3a1a1a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 48px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--f-disp);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(1.6rem,3.4vw,2.4rem);font-weight:800;line-height:1.1}
+h2{font-size:1.15rem;font-weight:700}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--ink2);max-width:68ch;margin:.5rem 0 0}
+header{display:grid;gap:10px}
+.status{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font-family:var(--f-mono);font-size:.75rem;padding:3px 9px;border-radius:999px;border:1px solid var(--rule);color:var(--ink2);background:var(--panel)}
+.chip.nino{border-color:var(--nino);color:var(--nino)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:14px 16px;display:grid;gap:4px;align-content:start;min-width:0}
+.kpi .v{font-family:var(--f-disp);font-size:1.75rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .l{font-size:.86rem;color:var(--ink2)}
+.kpi .s{font-family:var(--f-mono);font-size:.7rem;color:var(--muted)}
+.kpi.fleet .v{color:var(--fleet)} .kpi.plant .v{color:var(--plant)} .kpi.nino .v{color:var(--nino)}
+.alert{background:var(--warn-bg);border:1px solid var(--warn);border-radius:10px;padding:16px 18px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.alert .dot{width:14px;height:14px;border-radius:50%;background:var(--warn);margin-top:5px}
+.alert p{margin:.3rem 0 0;color:var(--ink2);max-width:80ch}
+.alert strong{color:var(--ink)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:18px;display:grid;gap:10px;min-width:0}
+.card p.note{margin:0;color:var(--ink2);font-size:.9rem}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.82rem;color:var(--ink2)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
+.chartbox{position:relative}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:6px 9px;font-family:var(--f-mono);font-size:.74rem;color:var(--ink);box-shadow:0 4px 14px rgba(0,0,0,.12);white-space:nowrap}
+.sim{display:grid;gap:14px}
+.sim label{font-weight:600}
+.sim input[type=range]{width:100%;accent-color:var(--ink)}
+.simout{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.simcol{border:1px solid var(--rule);border-radius:8px;padding:12px 14px;display:grid;gap:6px}
+.simcol h3{font-size:.95rem;display:flex;align-items:center;gap:8px}
+.simcol h3 i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.row{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums;font-size:.92rem}
+.row span:first-child{color:var(--ink2)}
+.pill{font-family:var(--f-mono);font-size:.72rem;padding:2px 8px;border-radius:999px;font-weight:600}
+.pill.ok{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.pill.bad{background:var(--crit-bg);color:var(--crit)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:620px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num{font-variant-numeric:tabular-nums}
+.stars{color:var(--warn);letter-spacing:1px}
+footer{color:var(--muted);font-size:.8rem;display:grid;gap:6px}
+footer a{color:var(--ink2)}
+.flip{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.flip div{border-left:3px solid var(--rule);padding:2px 0 2px 12px}
+.flip b{display:block;font-family:var(--f-disp)}
+.flip .was{color:var(--muted);text-decoration:line-through;font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Sector atunero · Manta · Montecristi · Jaramijó</span>
+  <h1>Precio del atún, El Niño y rentabilidad del sector atunero de Manabí</h1>
+  <p class="lede">Balances SUPERCIAS 2011–2025 de <b id="nEmp"></b> empresas (<b id="nObs"></b> observaciones empresa-año), precio del barrilete en Bangkok (Thai Union) e índice ONI de NOAA. Hecho para gerentes de plantas procesadoras y armadores.</p>
+  <div class="status">
+    <span class="chip nino" id="chipOni"></span>
+    <span class="chip" id="chipPrecio"></span>
+    <span class="chip">Datos financieros hasta 2025</span>
+  </div>
+</header>
+
+<section class="kpis" aria-label="Indicadores clave">
+  <div class="kpi fleet"><span class="l">Precio de equilibrio de la flota</span><span class="v" id="k1"></span><span class="s" id="k1s"></span></div>
+  <div class="kpi fleet"><span class="l">Margen operativo de la flota por +USD 100/t</span><span class="v" id="k2"></span><span class="s" id="k2s"></span></div>
+  <div class="kpi plant"><span class="l">Margen bruto de las plantas por cada +10% de alza anual</span><span class="v" id="k3"></span><span class="s" id="k3s"></span></div>
+  <div class="kpi nino"><span class="l">Precio 7 meses después de El Niño vs. La Niña</span><span class="v" id="k4"></span><span class="s" id="k4s"></span></div>
+</section>
+
+<section class="alert" role="note">
+  <span class="dot" aria-hidden="true"></span>
+  <div>
+    <h2>Octubre 2026: El Niño fuerte con precio alto, un patrón roto</h2>
+    <p id="alertTxt"></p>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Lo que cambia respecto de la hipótesis inicial</h2>
+  <div class="flip">
+    <div><span class="was">El Niño → escasez → precio Bangkok ↑</span><b>El Niño → precio Bangkok ↓</b>Tras El Niño la tonelada vale en promedio <span id="f1"></span> menos que tras La Niña.</div>
+    <div><span class="was">Armadores: doble beneficio en El Niño</span><b>Armadores: el mayor riesgo es El Niño</b>Los años de pérdida agregada (2015 y 2019) fueron años El Niño con precio bajo USD 1.250.</div>
+    <div><span class="was">Plantas: precio alto → margen ↓</span><b>Plantas: lo que duele es la velocidad</b>Trasladan el nivel de precio a sus ventas, pero un alza rápida comprime el margen ese año.</div>
+  </div>
+</section>
+
+<section class="card">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:end">
+    <h2>Precio Bangkok y episodios ENSO, 2011–2026</h2>
+    <div class="legend"><span><i style="background:var(--ink)"></i>Precio USD/t</span><span><i style="background:var(--nino);opacity:.35"></i>Meses El Niño</span><span><i style="background:var(--nina);opacity:.35"></i>Meses La Niña</span></div>
+  </div>
+  <div class="chartbox" id="cPrecio"></div>
+  <p class="note">La correlación entre el ONI y el precio es máxima con 7 meses de rezago (r = −0,39). El ONI anticipa el <i>régimen</i> de precios, no el precio del mes siguiente: el test de Granger no es significativo.</p>
+</section>
+
+<div class="grid2">
+  <section class="card">
+    <h2>Margen operativo agregado por tipo de empresa</h2>
+    <div class="legend"><span><i style="background:var(--fleet)"></i>Pesqueras (armadores)</span><span><i style="background:var(--plant)"></i>Manufactureras (plantas)</span></div>
+    <div class="chartbox" id="cMargen"></div>
+    <p class="note">Ponderado por ingresos. 2014 no se muestra: ese año casi ninguna empresa reportó utilidad antes de impuestos en el formulario.</p>
+  </section>
+  <section class="card">
+    <h2>Precio promedio 7 meses después de cada episodio</h2>
+    <div class="chartbox" id="cEpis"></div>
+    <p class="note">Diferencia El Niño − La Niña: <span id="epDif"></span> (IC 95% con errores HAC: <span id="epCI"></span>; p &lt; 0,001).</p>
+  </section>
+</div>
+
+<section class="card sim">
+  <h2>Simulador: ¿qué pasa con su margen a otro precio?</h2>
+  <label for="sl">Precio Bangkok skipjack: <span id="slv" style="font-family:var(--f-mono)"></span></label>
+  <input type="range" id="sl" min="900" max="2500" step="25" value="1575">
+  <div class="simout">
+    <div class="simcol" id="simP"></div>
+    <div class="simcol" id="simM"></div>
+  </div>
+  <p class="note">Usa la relación histórica 2011–2025 entre precio y margen operativo agregado. El porcentaje de empresas en pérdida desplaza el margen 2025 de cada empresa por el mismo cambio. Fuera de USD 1.170–2.130 (rango observado) el resultado es una extrapolación.</p>
+</section>
+
+<section class="card">
+  <h2>Protocolo de alerta ONI, revisado con la evidencia</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Señal ONI (NOAA, mensual)</th><th>Patrón histórico del precio</th><th>Armadores</th><th>Plantas</th></tr></thead>
+    <tbody>
+      <tr><td>≥ +0,5 dos meses seguidos</td><td>Tiende a bajar en 6–9 meses</td><td>Negociar un piso de precio ahora</td><td>No sobre-comprar; comprar en tramos</td></tr>
+      <tr><td>≥ +1,0</td><td>Promedio tras El Niño ≈ USD 1.320/t</td><td>Piso cerca del equilibrio (~USD 1.340)</td><td>Comprar en tramos mientras el precio baja</td></tr>
+      <tr><td>≤ −0,5</td><td>Tiende a subir (≈ USD 1.760/t)</td><td>Capturar el precio alto</td><td>Asegurar un techo antes del alza</td></tr>
+      <tr><td>Precio fuera del rango del modelo (2026)</td><td>Patrón roto</td><td>No apalancarse en el precio alto</td><td>Vigilar el ritmo mensual de alza</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="card">
+  <h2>Opciones de cobertura en Ecuador</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Instrumento</th><th>Viabilidad</th><th>Costo</th><th>Para quién</th></tr></thead>
+    <tbody>
+      <tr><td><b>Contrato con banda de precio planta–armador</b> (piso/techo indexado a Bangkok)</td><td><span class="stars">★★★</span> Alta</td><td>Nulo</td><td>Plantas y flota: cobertura natural (Recomendación #1)</td></tr>
+      <tr><td>Forward de precio fijo con proveedor</td><td><span class="stars">★★★</span> Alta</td><td>Bajo</td><td>Plantas</td></tr>
+      <tr><td>Compra escalonada guiada por el ONI</td><td><span class="stars">★★★</span> Alta</td><td>Nulo</td><td>Plantas</td></tr>
+      <tr><td>Cláusulas de reajuste en contratos de venta</td><td><span class="stars">★★</span> Media</td><td>Bajo</td><td>Plantas: atacan el efecto velocidad</td></tr>
+      <tr><td>Integración vertical (planta + barco)</td><td><span class="stars">★★</span> Media</td><td>Alto</td><td>Grupos grandes</td></tr>
+      <tr><td>Opciones OTC con bancos internacionales</td><td><span class="stars">★</span> Baja</td><td>Alto</td><td>Exportadores con más de USD 10 M</td></tr>
+      <tr><td>Futuros listados de atún</td><td>No existen</td><td>—</td><td>No hay contrato de skipjack en CME ni SGX</td></tr>
+      <tr><td>Servicio de coberturas del BCE (Res. JPRFM-2026-009-M)</td><td>No aplica</td><td>—</td><td>Solo empresas públicas nacionales</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <span><b>Método.</b> Panel con efectos fijos de empresa y errores Driscoll-Kraay; series agregadas y mensuales con errores HAC; CCF bruta y pre-blanqueada; ANOVA, Kruskal-Wallis, Welch, Tukey y Granger. Los ratios se acotan a [−1, 1] y se exigen ingresos ≥ USD 100 mil. Los intervalos son amplios porque el precio varía en el tiempo pero es común a todas las empresas (~15 años de variación).</span>
+  <span><b>Fuentes.</b> Superintendencia de Compañías, Valores y Seguros (2026), <a href="https://appscvsmovil.supercias.gob.ec/ranking/reporte.html">Ranking de Compañías</a> · Thai Union IR, <a href="https://investor.thaiunion.com/en/financial-info/raw-material-price-trend">Raw material price trend</a> · NOAA CPC, <a href="https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt">ONI</a> · Lehodey et al. (1997) <i>Nature</i> 389 · Ormaza-González et al. (2016) <i>Adv. Geosci.</i> 42 · Kim et al. (2020) <i>Sci. Rep.</i> 10 · Hou et al. (2022) <i>Front. Mar. Sci.</i> 9.</span>
+  <span>Análisis: Marlon Andrade Ortega. Este material no constituye asesoría de inversión.</span>
+</footer>
+</div>
+
+<script>
+const D = {"mensual": [{"f": "2011-01", "p": 1515.0, "o": -1.29}, {"f": "2011-02", "p": 1590.0, "o": -1.06}, {"f": "2011-03", "p": 1475.0, "o": -0.85}, {"f": "2011-04", "p": 1680.0, "o": -0.68}, {"f": "2011-05", "p": 1840.0, "o": -0.5}, {"f": "2011-06", "p": 1905.0, "o": -0.34}, {"f": "2011-07", "p": 1620.0, "o": -0.37}, {"f": "2011-08", "p": 1845.0, "o": -0.5}, {"f": "2011-09", "p": 1975.0, "o": -0.76}, {"f": "2011-10", "p": 1830.0, "o": -0.94}, {"f": "2011-11", "p": 1910.0, "o": -1.02}, {"f": "2011-12", "p": 2005.0, "o": -0.92}, {"f": "2012-01", "p": 2030.0, "o": -0.71}, {"f": "2012-02", "p": 1930.0, "o": -0.56}, {"f": "2012-03", "p": 2090.0, "o": -0.44}, {"f": "2012-04", "p": 2195.0, "o": -0.35}, {"f": "2012-05", "p": 2198.0, "o": -0.18}, {"f": "2012-06", "p": 2200.0, "o": 0.03}, {"f": "2012-07", "p": 2240.0, "o": 0.28}, {"f": "2012-08", "p": 2280.0, "o": 0.39}, {"f": "2012-09", "p": 2350.0, "o": 0.37}, {"f": "2012-10", "p": 2210.0, "o": 0.28}, {"f": "2012-11", "p": 1900.0, "o": 0.13}, {"f": "2012-12", "p": 1900.0, "o": -0.03}, {"f": "2013-01", "p": 2075.0, "o": -0.24}, {"f": "2013-02", "p": 2195.0, "o": -0.28}, {"f": "2013-03", "p": 2325.0, "o": -0.23}, {"f": "2013-04", "p": 2320.0, "o": -0.2}, {"f": "2013-05", "p": 2195.0, "o": -0.3}, {"f": "2013-06", "p": 2020.0, "o": -0.38}, {"f": "2013-07", "p": 1850.0, "o": -0.45}, {"f": "2013-08", "p": 1880.0, "o": -0.34}, {"f": "2013-09", "p": 1875.0, "o": -0.32}, {"f": "2013-10", "p": 1770.0, "o": -0.14}, {"f": "2013-11", "p": 1570.0, "o": -0.12}, {"f": "2013-12", "p": 1400.0, "o": -0.11}, {"f": "2014-01", "p": 1275.0, "o": -0.24}, {"f": "2014-02", "p": 1225.0, "o": -0.21}, {"f": "2014-03", "p": 1175.0, "o": -0.02}, {"f": "2014-04", "p": 1225.0, "o": 0.25}, {"f": "2014-05", "p": 1485.0, "o": 0.35}, {"f": "2014-06", "p": 1710.0, "o": 0.22}, {"f": "2014-07", "p": 1800.0, "o": 0.07}, {"f": "2014-08", "p": 1600.0, "o": 0.07}, {"f": "2014-09", "p": 1280.0, "o": 0.24}, {"f": "2014-10", "p": 1200.0, "o": 0.51}, {"f": "2014-11", "p": 1180.0, "o": 0.7}, {"f": "2014-12", "p": 1180.0, "o": 0.8}, {"f": "2015-01", "p": 1150.0, "o": 0.73}, {"f": "2015-02", "p": 1150.0, "o": 0.65}, {"f": "2015-03", "p": 1010.0, "o": 0.72}, {"f": "2015-04", "p": 1035.0, "o": 0.86}, {"f": "2015-05", "p": 1070.0, "o": 1.04}, {"f": "2015-06", "p": 1200.0, "o": 1.19}, {"f": "2015-07", "p": 1400.0, "o": 1.44}, {"f": "2015-08", "p": 1500.0, "o": 1.73}, {"f": "2015-09", "p": 1390.0, "o": 2.02}, {"f": "2015-10", "p": 1140.0, "o": 2.28}, {"f": "2015-11", "p": 1000.0, "o": 2.45}, {"f": "2015-12", "p": 1000.0, "o": 2.59}, {"f": "2016-01", "p": 1000.0, "o": 2.5}, {"f": "2016-02", "p": 1170.0, "o": 2.21}, {"f": "2016-03", "p": 1600.0, "o": 1.69}, {"f": "2016-04", "p": 1610.0, "o": 1.11}, {"f": "2016-05", "p": 1500.0, "o": 0.57}, {"f": "2016-06", "p": 1400.0, "o": 0.09}, {"f": "2016-07", "p": 1400.0, "o": -0.19}, {"f": "2016-08", "p": 1450.0, "o": -0.34}, {"f": "2016-09", "p": 1450.0, "o": -0.42}, {"f": "2016-10", "p": 1400.0, "o": -0.51}, {"f": "2016-11", "p": 1500.0, "o": -0.49}, {"f": "2016-12", "p": 1625.0, "o": -0.37}, {"f": "2017-01", "p": 1700.0, "o": -0.08}, {"f": "2017-02", "p": 1700.0, "o": 0.08}, {"f": "2017-03", "p": 1500.0, "o": 0.27}, {"f": "2017-04", "p": 1690.0, "o": 0.32}, {"f": "2017-05", "p": 1700.0, "o": 0.35}, {"f": "2017-06", "p": 1900.0, "o": 0.32}, {"f": "2017-07", "p": 1950.0, "o": 0.14}, {"f": "2017-08", "p": 1980.0, "o": -0.07}, {"f": "2017-09", "p": 2100.0, "o": -0.23}, {"f": "2017-10", "p": 2300.0, "o": -0.44}, {"f": "2017-11", "p": 2000.0, "o": -0.61}, {"f": "2017-12", "p": 1800.0, "o": -0.76}, {"f": "2018-01", "p": 1550.0, "o": -0.71}, {"f": "2018-02", "p": 1480.0, "o": -0.67}, {"f": "2018-03", "p": 1700.0, "o": -0.55}, {"f": "2018-04", "p": 1800.0, "o": -0.35}, {"f": "2018-05", "p": 1600.0, "o": -0.07}, {"f": "2018-06", "p": 1600.0, "o": 0.13}, {"f": "2018-07", "p": 1300.0, "o": 0.2}, {"f": "2018-08", "p": 1450.0, "o": 0.3}, {"f": "2018-09", "p": 1650.0, "o": 0.52}, {"f": "2018-10", "p": 1525.0, "o": 0.82}, {"f": "2018-11", "p": 1400.0, "o": 1.04}, {"f": "2018-12", "p": 1300.0, "o": 1.05}, {"f": "2019-01", "p": 1280.0, "o": 0.99}, {"f": "2019-02", "p": 1480.0, "o": 0.94}, {"f": "2019-03", "p": 1600.0, "o": 0.87}, {"f": "2019-04", "p": 1450.0, "o": 0.82}, {"f": "2019-05", "p": 1200.0, "o": 0.71}, {"f": "2019-06", "p": 1000.0, "o": 0.59}, {"f": "2019-07", "p": 1200.0, "o": 0.38}, {"f": "2019-08", "p": 1350.0, "o": 0.2}, {"f": "2019-09", "p": 1100.0, "o": 0.31}, {"f": "2019-10", "p": 900.0, "o": 0.51}, {"f": "2019-11", "p": 900.0, "o": 0.72}, {"f": "2019-12", "p": 1050.0, "o": 0.75}, {"f": "2020-01", "p": 1350.0, "o": 0.71}, {"f": "2020-02", "p": 1475.0, "o": 0.66}, {"f": "2020-03", "p": 1500.0, "o": 0.57}, {"f": "2020-04", "p": 1400.0, "o": 0.33}, {"f": "2020-05", "p": 1200.0, "o": 0.04}, {"f": "2020-06", "p": 1200.0, "o": -0.18}, {"f": "2020-07", "p": 1550.0, "o": -0.29}, {"f": "2020-08", "p": 1625.0, "o": -0.43}, {"f": "2020-09", "p": 1325.0, "o": -0.77}, {"f": "2020-10", "p": 1300.0, "o": -1.0}, {"f": "2020-11", "p": 1400.0, "o": -1.11}, {"f": "2020-12", "p": 1300.0, "o": -1.06}, {"f": "2021-01", "p": 1200.0, "o": -0.99}, {"f": "2021-02", "p": 1300.0, "o": -0.85}, {"f": "2021-03", "p": 1350.0, "o": -0.74}, {"f": "2021-04", "p": 1340.0, "o": -0.56}, {"f": "2021-05", "p": 1280.0, "o": -0.4}, {"f": "2021-06", "p": 1350.0, "o": -0.31}, {"f": "2021-07", "p": 1500.0, "o": -0.35}, {"f": "2021-08", "p": 1400.0, "o": -0.46}, {"f": "2021-09", "p": 1300.0, "o": -0.64}, {"f": "2021-10", "p": 1500.0, "o": -0.77}, {"f": "2021-11", "p": 1600.0, "o": -0.91}, {"f": "2021-12", "p": 1750.0, "o": -0.83}, {"f": "2022-01", "p": 1600.0, "o": -0.76}, {"f": "2022-02", "p": 1650.0, "o": -0.68}, {"f": "2022-03", "p": 1900.0, "o": -0.77}, {"f": "2022-04", "p": 1800.0, "o": -0.86}, {"f": "2022-05", "p": 1600.0, "o": -0.83}, {"f": "2022-06", "p": 1425.0, "o": -0.73}, {"f": "2022-07", "p": 1600.0, "o": -0.7}, {"f": "2022-08", "p": 1800.0, "o": -0.78}, {"f": "2022-09", "p": 1600.0, "o": -0.87}, {"f": "2022-10", "p": 1580.0, "o": -0.89}, {"f": "2022-11", "p": 1700.0, "o": -0.82}, {"f": "2022-12", "p": 1700.0, "o": -0.7}, {"f": "2023-01", "p": 1680.0, "o": -0.55}, {"f": "2023-02", "p": 1800.0, "o": -0.33}, {"f": "2023-03", "p": 1980.0, "o": -0.11}, {"f": "2023-04", "p": 2000.0, "o": 0.19}, {"f": "2023-05", "p": 2000.0, "o": 0.46}, {"f": "2023-06", "p": 2000.0, "o": 0.73}, {"f": "2023-07", "p": 1900.0, "o": 1.0}, {"f": "2023-08", "p": 1800.0, "o": 1.25}, {"f": "2023-09", "p": 1700.0, "o": 1.5}, {"f": "2023-10", "p": 1600.0, "o": 1.74}, {"f": "2023-11", "p": 1500.0, "o": 1.9}, {"f": "2023-12", "p": 1450.0, "o": 1.99}, {"f": "2024-01", "p": 1400.0, "o": 1.84}, {"f": "2024-02", "p": 1300.0, "o": 1.53}, {"f": "2024-03", "p": 1300.0, "o": 1.18}, {"f": "2024-04", "p": 1375.0, "o": 0.77}, {"f": "2024-05", "p": 1480.0, "o": 0.43}, {"f": "2024-06", "p": 1580.0, "o": 0.18}, {"f": "2024-07", "p": 1580.0, "o": 0.06}, {"f": "2024-08", "p": 1250.0, "o": -0.04}, {"f": "2024-09", "p": 1400.0, "o": -0.12}, {"f": "2024-10", "p": 1500.0, "o": -0.19}, {"f": "2024-11", "p": 1550.0, "o": -0.29}, {"f": "2024-12", "p": 1540.0, "o": -0.43}, {"f": "2025-01", "p": 1540.0, "o": -0.46}, {"f": "2025-02", "p": 1700.0, "o": -0.22}, {"f": "2025-03", "p": 1740.0, "o": -0.08}, {"f": "2025-04", "p": 1550.0, "o": 0.02}, {"f": "2025-05", "p": 1480.0, "o": -0.04}, {"f": "2025-06", "p": 1500.0, "o": -0.02}, {"f": "2025-07", "p": 1500.0, "o": -0.11}, {"f": "2025-08", "p": 1550.0, "o": -0.26}, {"f": "2025-09", "p": 1600.0, "o": -0.43}, {"f": "2025-10", "p": 1670.0, "o": -0.57}, {"f": "2025-11", "p": 1580.0, "o": -0.61}, {"f": "2025-12", "p": 1470.0, "o": -0.6}, {"f": "2026-01", "p": 1500.0, "o": -0.39}, {"f": "2026-02", "p": 1580.0, "o": -0.21}, {"f": "2026-03", "p": 2000.0, "o": 0.11}, {"f": "2026-04", "p": 1875.0, "o": 0.46}, {"f": "2026-05", "p": 1730.0, "o": 0.95}, {"f": "2026-06", "p": 1700.0, "o": 1.39}, {"f": "2026-07", "p": 1850.0, "o": 1.8}, {"f": "2026-08", "p": 2100.0, "o": 2.16}, {"f": "2026-09", "p": 2275.0, "o": null}], "anual": [{"t": "Manufacturera", "a": 2011, "mo": 5.98, "n": 23, "pp": 1766}, {"t": "Manufacturera", "a": 2012, "mo": 7.04, "n": 28, "pp": 2127}, {"t": "Manufacturera", "a": 2013, "mo": 6.45, "n": 31, "pp": 1956}, {"t": "Manufacturera", "a": 2014, "mo": null, "n": 32, "pp": 1361}, {"t": "Manufacturera", "a": 2015, "mo": 2.78, "n": 29, "pp": 1170}, {"t": "Manufacturera", "a": 2016, "mo": 2.88, "n": 29, "pp": 1425}, {"t": "Manufacturera", "a": 2017, "mo": 4.18, "n": 32, "pp": 1860}, {"t": "Manufacturera", "a": 2018, "mo": 4.93, "n": 31, "pp": 1530}, {"t": "Manufacturera", "a": 2019, "mo": 4.29, "n": 32, "pp": 1209}, {"t": "Manufacturera", "a": 2020, "mo": 5.1, "n": 32, "pp": 1385}, {"t": "Manufacturera", "a": 2021, "mo": 2.04, "n": 33, "pp": 1406}, {"t": "Manufacturera", "a": 2022, "mo": 2.54, "n": 37, "pp": 1663}, {"t": "Manufacturera", "a": 2023, "mo": 2.95, "n": 37, "pp": 1784}, {"t": "Manufacturera", "a": 2024, "mo": 5.28, "n": 38, "pp": 1438}, {"t": "Manufacturera", "a": 2025, "mo": 4.04, "n": 36, "pp": 1573}, {"t": "Pesquera", "a": 2011, "mo": 6.89, "n": 54, "pp": 1766}, {"t": "Pesquera", "a": 2012, "mo": 7.33, "n": 65, "pp": 2127}, {"t": "Pesquera", "a": 2013, "mo": 7.06, "n": 78, "pp": 1956}, {"t": "Pesquera", "a": 2014, "mo": null, "n": 83, "pp": 1361}, {"t": "Pesquera", "a": 2015, "mo": -4.44, "n": 90, "pp": 1170}, {"t": "Pesquera", "a": 2016, "mo": 0.72, "n": 89, "pp": 1425}, {"t": "Pesquera", "a": 2017, "mo": 4.32, "n": 110, "pp": 1860}, {"t": "Pesquera", "a": 2018, "mo": 2.45, "n": 112, "pp": 1530}, {"t": "Pesquera", "a": 2019, "mo": -0.14, "n": 116, "pp": 1209}, {"t": "Pesquera", "a": 2020, "mo": 0.87, "n": 116, "pp": 1385}, {"t": "Pesquera", "a": 2021, "mo": 1.96, "n": 123, "pp": 1406}, {"t": "Pesquera", "a": 2022, "mo": 1.46, "n": 122, "pp": 1663}, {"t": "Pesquera", "a": 2023, "mo": 1.35, "n": 123, "pp": 1784}, {"t": "Pesquera", "a": 2024, "mo": 1.3, "n": 127, "pp": 1438}, {"t": "Pesquera", "a": 2025, "mo": 4.03, "n": 128, "pp": 1573}], "modelos": {"Manufacturera": {"b0": -0.004832539972252567, "b1": 0.0030161933258954056}, "Pesquera": {"b0": -0.13145750261241182, "b1": 0.009832622384419175}}, "firmas": {"Manufacturera": [0.0059, 0.1003, 0.0017, 0.0646, 0.0174, 0.0652, -0.0151, 0.0087, 0.0357, 0.1483, 0.0475, 0.046, 0.0227, 0.0079, 0.0356, 0.0635, 0.0192, 0.0318, 0.0878, 0.0326, 0.0258, 0.0344, 0.0208, 0.0065, 0.0602, 0.0633, 0.062, 0.0158, 0.1401, 0.0293, 0.0036], "Pesquera": [0.0935, 0.1969, 0.0395, 0.0795, 0.1146, 0.0278, 0.003, -0.0007, 0.1662, 0.0812, 0.0267, -0.073, 0.0311, 0.0762, 0.0013, 0.0923, -0.0072, -0.2778, 0.0064, 0.4424, -0.009, -0.0087, 0.0361, 0.0216, 0.0019, 0.0088, 0.0381, 0.0153, 0.0332, 0.0109, 0.0278, 0.0303, 0.0075, 0.0306, 0.0018, 0.0079, 0.0062, 0.0268, 0.4055, 0.0196, 0.0051, -0.1971, 0.0513, 0.0024, 0.031, 0.0198, 0.0185, 0.0, 0.0453, -0.061, 0.0147, 0.0113, 0.0078, 0.0677, 0.0237, 0.2383, 0.0787, 0.0305, 0.0107, 0.0061, 0.0042, 0.0121, 0.0306, 0.1948, 0.006, -0.0329, -0.8819, 0.0042, 0.0189, 0.0471, 0.0342, -0.1455, -0.5753, -0.1973, 0.0253, -0.0005, 0.2546, 0.3441, -0.6131, 0.0003, 0.1064, 0.0756, -0.0003, 0.0154, 0.0382, 0.0478, 0.0465, 0.2731, 0.0633, 0.0372, 0.0017, 0.1066, 0.058, 0.0952, 0.115, 0.0049, 0.2019, 0.056, 0.1967, 0.0295, 0.0671, 0.0035, 0.9998, 0.1955]}, "ingresos": {"Manufacturera": 1314317976.8, "Pesquera": 1122235822.6599998}, "p_base": 1573.3333333333333, "anio_base": 2025, "episodios": {"El Niño": {"media": 1324, "n": 47}, "La Niña": {"media": 1758, "n": 46}, "Neutro": {"media": 1630, "n": 88}}, "h": {"cobertura": {"empresas_universo": 288, "obs_empresa_anio": 2086, "empresas_analisis_econometrico": 230, "obs_analisis": 1692, "manufactureras": 53, "pesqueras": 177, "periodo_financiero": "2011–2025 (precio desde 2011)", "periodo_mensual": "2011-01 a 2026-08", "n_meses": 188}, "q1": {"Manufacturera": {"margen_op_agr_por_100usd_pp": 0.3016, "ic95": [0.049, 0.5543], "p": 0.0193, "r2": 0.2954, "margen_bruto_fe_por_100usd_pp": 0.597, "margen_bruto_fe_ic95": [-0.0481, 1.2421], "margen_bruto_fe_p": 0.0696, "margen_bruto_fe_por_10pct_var_pp": -0.6821, "margen_bruto_fe_var_p": 0.002, "ventas_por_10pct_var_precio_pct": 2.9696, "ventas_p": 0.0006}, "Pesquera": {"margen_op_agr_por_100usd_pp": 0.9833, "ic95": [0.6559, 1.3106], "p": 0.0, "r2": 0.7355, "margen_bruto_fe_por_100usd_pp": 0.7978, "margen_bruto_fe_ic95": [0.4227, 1.1729], "margen_bruto_fe_p": 0.0, "margen_bruto_fe_por_10pct_var_pp": -0.3373, "margen_bruto_fe_var_p": 0.3003, "ventas_por_10pct_var_precio_pct": 4.8698, "ventas_p": 0.001}}, "q1_asimetria": {"coef_precio_manuf_pp": -0.10572023675320573, "coef_diferencial_pesquera_pp": 0.7469124868138004, "p_diferencial": 6.187319621075993e-05}, "q2": {"lag_optimo_meses": 7, "ccf_lag_optimo": -0.38496567881993415, "granger_min_p": 0.1665, "adf_p": {"precio_usd_ton": 0.07001129972427901, "oni_anom": 0.036927690100441585, "dlog_precio": 2.810718347787834e-18}, "contemporaneo": {"precio_nino": null, "dif_nino_nina_usd": -243.7447, "welch_p": 0.0, "hac_p": 0.0231, "anova_p": 0.0, "kruskal_p": 0.0}, "rezagado": {"rezago": 7, "dif_nino_nina_usd": -433.9528, "welch_p": 0.0, "hac_p": 0.0003, "hac_ic95": [-667.0, -201.0], "anova_p": 0.0}, "r2_lineal_lag_opt": 0.16265895851184597, "r2_poly_lag_opt": 0.18816712563881055, "lag_mejor_poly": 12, "r2_mejor_poly": 0.2221827661549628, "pronostico": {"fecha_oni": "2026-08", "oni_actual": 2.16, "precio_ultimo_con_oni": 2100.0, "horizonte_meses": 7, "precio_esperado": 1369.7860212059868, "pi95_inf": 786.2689267410259, "pi95_sup": 1953.3031156709476}}, "q3": {"breakeven": {"Manufacturera": {"precio_breakeven_usd_t": 160.2198, "ic95_inf": -1012.1863, "ic95_sup": 1332.6259, "efecto_100usd_pp": 0.3016, "efecto_ic95_inf": 0.049, "efecto_ic95_sup": 0.5543, "r2": 0.2954, "precio_min_observado": 1170.4167, "precio_max_observado": 2126.9167, "dentro_rango_observado": false, "anios_con_margen_operativo_negativo": ""}, "Pesquera": {"precio_breakeven_usd_t": 1336.9526, "ic95_inf": 1213.0989, "ic95_sup": 1460.8064, "efecto_100usd_pp": 0.9833, "efecto_ic95_inf": 0.6559, "efecto_ic95_sup": 1.3106, "r2": 0.7355, "precio_min_observado": 1170.4167, "precio_max_observado": 2126.9167, "dentro_rango_observado": true, "anios_con_margen_operativo_negativo": "2015, 2019"}}, "shock_velocidad_manuf": {"coef_pp_por_10pct": -0.6821, "ic95": [-1.1124, -0.2519], "p_value": 0.002, "impacto_musd_shock_30pct": -26.894888759258397}, "precio_base": 1573.3333333333333, "anio_base": 2025}}};
+const H = D.h;
+const es = (x, d = 0) => x.toLocaleString("es-EC", {minimumFractionDigits: d, maximumFractionDigits: d});
+const usd = x => "USD " + es(x);
+const $ = id => document.getElementById(id);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs = {}, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+
+// ---- textos
+const be = H.q3.breakeven.Pesquera, pr = H.q2.pronostico, last = D.mensual[D.mensual.length - 1];
+const lastOni = [...D.mensual].reverse().find(r => r.o !== null);
+$("nEmp").textContent = H.cobertura.empresas_analisis_econometrico;
+$("nObs").textContent = es(H.cobertura.obs_analisis);
+$("chipOni").textContent = `ONI ${lastOni.f}: +${es(lastOni.o, 2)} · El Niño fuerte`;
+$("chipPrecio").textContent = `Precio ${last.f}: ${usd(last.p)}/t`;
+$("k1").textContent = usd(be.precio_breakeven_usd_t) + "/t";
+$("k1s").textContent = `IC95 ${es(be.ic95_inf)}–${es(be.ic95_sup)} · margen operativo = 0`;
+$("k2").textContent = "+" + es(H.q1.Pesquera.margen_op_agr_por_100usd_pp, 2) + " pp";
+$("k2s").textContent = `IC95 ${es(H.q1.Pesquera.ic95[0], 2)}–${es(H.q1.Pesquera.ic95[1], 2)} · plantas +${es(H.q1.Manufacturera.margen_op_agr_por_100usd_pp, 2)} pp`;
+$("k3").textContent = "−" + es(Math.abs(H.q1.Manufacturera.margen_bruto_fe_por_10pct_var_pp), 2) + " pp";
+$("k3s").textContent = `p = ${es(H.q1.Manufacturera.margen_bruto_fe_var_p, 3)} · el nivel de precio no las daña`;
+$("k4").textContent = "−" + usd(Math.abs(H.q2.rezagado.dif_nino_nina_usd));
+$("k4s").textContent = `${usd(D.episodios["El Niño"].media)} vs ${usd(D.episodios["La Niña"].media)} · p < 0,001`;
+$("f1").textContent = usd(Math.abs(H.q2.rezagado.dif_nino_nina_usd)) + "/t";
+$("epDif").textContent = "−" + usd(Math.abs(H.q2.rezagado.dif_nino_nina_usd)) + "/t";
+$("epCI").textContent = `${usd(H.q2.rezagado.hac_ic95[0])} a ${usd(H.q2.rezagado.hac_ic95[1])}`;
+const ytd = D.mensual.filter(r => r.f.startsWith("2026")), ytdAvg = ytd.reduce((s, r) => s + r.p, 0) / ytd.length;
+const ytdChg = (ytdAvg / D.p_base - 1) * 100;
+$("alertTxt").innerHTML = `El ONI está en <strong>+${es(lastOni.o, 2)}</strong>, un nivel comparable a 2015 y 2023. Según el patrón 2011–2025, el precio debería bajar hacia <strong>~${usd(pr.precio_esperado)}/t</strong> en unos ${pr.horizonte_meses} meses (intervalo 95%: ${es(pr.pi95_inf)}–${es(pr.pi95_sup)}). Pero hoy está en <strong>${usd(last.p)}/t</strong>, por encima de ese intervalo. <strong>Plantas:</strong> el promedio de 2026 (${usd(ytdAvg)}) es ${es(ytdChg, 0)}% mayor que el de 2025, lo que implica ≈ −${es(Math.abs(H.q1.Manufacturera.margen_bruto_fe_por_10pct_var_pp) * ytdChg / 10, 1)} pp de margen bruto este año. <strong>Flota:</strong> si el patrón reaparece en 2027, el precio podría acercarse al equilibrio de ~${usd(Math.round(be.precio_breakeven_usd_t / 10) * 10)}. Es buen momento para negociar un piso.`;
+
+// ---- tooltip helper
+function tipFor(box) { const t = document.createElement("div"); t.className = "tip"; t.hidden = true; box.appendChild(t); return t; }
+function placeTip(t, box, x, y, html) { t.innerHTML = html; t.hidden = false; const bw = box.clientWidth; const tw = t.offsetWidth; let left = x + 12; if (left + tw > bw) left = x - tw - 12; t.style.left = Math.max(0, left) + "px"; t.style.top = Math.max(0, y - 10) + "px"; }
+
+// ---- gráfico 1: precio + ONI (dos paneles, un eje cada uno)
+function chartPrecio() {
+  const box = $("cPrecio"); box.innerHTML = "";
+  const W = 1100, H1 = 260, H2 = 90, G = 26, L = 52, R = 14, T = 10, B = 22, Ht = T + H1 + G + H2 + B;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${Ht}`, role: "img", "aria-label": "Precio mensual del atún en Bangkok y ONI"}, box);
+  const n = D.mensual.length, x = i => L + i * (W - L - R) / (n - 1);
+  const pmin = 700, pmax = 2500, y = v => T + H1 - (v - pmin) / (pmax - pmin) * H1;
+  const omax = 2.8, y2 = v => T + H1 + G + H2 / 2 - v / omax * (H2 / 2);
+  D.mensual.forEach((r, i) => { if (r.o === null) return; const c = r.o >= .5 ? css("--nino") : r.o <= -.5 ? css("--nina") : null; if (c) el("rect", {x: x(i) - (W - L - R) / (n - 1) / 2, y: T, width: (W - L - R) / (n - 1) + .5, height: H1, fill: c, "fill-opacity": .12}, svg); });
+  for (let v = 800; v <= 2400; v += 400) { el("line", {x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: css("--rule"), "stroke-width": 1}, svg); el("text", {x: L - 8, y: y(v) + 3, "text-anchor": "end"}, svg).textContent = es(v); }
+  const bey = y(be.precio_breakeven_usd_t);
+  el("line", {x1: L, x2: W - R, y1: bey, y2: bey, stroke: css("--fleet"), "stroke-width": 1.2}, svg);
+  el("text", {x: W - R, y: bey - 5, "text-anchor": "end", style: `fill:${css("--fleet")}`}, svg).textContent = "Equilibrio de la flota ≈ " + usd(be.precio_breakeven_usd_t);
+  el("path", {d: D.mensual.map((r, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(r.p).toFixed(1)).join(" "), fill: "none", stroke: css("--ink"), "stroke-width": 2, "stroke-linejoin": "round"}, svg);
+  el("circle", {cx: x(n - 1), cy: y(last.p), r: 4.5, fill: css("--ink"), stroke: css("--panel"), "stroke-width": 2}, svg);
+  el("line", {x1: L, x2: W - R, y1: y2(0), y2: y2(0), stroke: css("--rule")}, svg);
+  [.5, -.5].forEach(v => el("line", {x1: L, x2: W - R, y1: y2(v), y2: y2(v), stroke: css(v > 0 ? "--nino" : "--nina"), "stroke-width": .6}, svg));
+  el("text", {x: L - 8, y: y2(0) + 3, "text-anchor": "end"}, svg).textContent = "ONI";
+  const bw = Math.max(1, (W - L - R) / (n - 1) - 1.5);
+  D.mensual.forEach((r, i) => { if (r.o === null) return; const c = r.o >= .5 ? css("--nino") : r.o <= -.5 ? css("--nina") : css("--neutro"); el("rect", {x: x(i) - bw / 2, y: Math.min(y2(0), y2(r.o)), width: bw, height: Math.abs(y2(r.o) - y2(0)), fill: c}, svg); });
+  D.mensual.forEach((r, i) => { if (r.f.endsWith("-01") && +r.f.slice(0, 4) % 2 === 1) el("text", {x: x(i), y: Ht - 6, "text-anchor": "middle"}, svg).textContent = r.f.slice(0, 4); });
+  const cross = el("line", {y1: T, y2: T + H1 + G + H2, stroke: css("--muted"), "stroke-width": 1, visibility: "hidden"}, svg);
+  const dot = el("circle", {r: 4, fill: css("--ink"), visibility: "hidden"}, svg);
+  const tip = tipFor(box);
+  const hit = el("rect", {x: L, y: T, width: W - L - R, height: H1 + G + H2, fill: "transparent"}, svg);
+  hit.addEventListener("pointermove", e => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; const p = pt.matrixTransform(svg.getScreenCTM().inverse()); const i = Math.max(0, Math.min(n - 1, Math.round((p.x - L) / (W - L - R) * (n - 1)))); const r = D.mensual[i]; cross.setAttribute("x1", x(i)); cross.setAttribute("x2", x(i)); cross.setAttribute("visibility", "visible"); dot.setAttribute("cx", x(i)); dot.setAttribute("cy", y(r.p)); dot.setAttribute("visibility", "visible"); const s = box.clientWidth / W; placeTip(tip, box, x(i) * s, y(r.p) * s, `<b>${r.f}</b><br>${usd(r.p)}/t<br>ONI ${r.o === null ? "s/d" : (r.o > 0 ? "+" : "") + es(r.o, 2)}`); });
+  hit.addEventListener("pointerleave", () => { tip.hidden = true; cross.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); });
+}
+
+// ---- gráfico 2: margen operativo por tipo
+function chartMargen() {
+  const box = $("cMargen"); box.innerHTML = "";
+  const W = 520, Hh = 270, L = 40, R = 76, T = 12, B = 24;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": "Margen operativo agregado por tipo"}, box);
+  const yrs = [...new Set(D.anual.map(r => r.a))].sort(), x = a => L + (a - yrs[0]) / (yrs[yrs.length - 1] - yrs[0]) * (W - L - R);
+  const ymin = -6, ymax = 8, y = v => T + (ymax - v) / (ymax - ymin) * (Hh - T - B);
+  for (let v = -4; v <= 8; v += 4) { el("line", {x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: v === 0 ? css("--crit") : css("--rule"), "stroke-width": v === 0 ? 1.2 : 1}, svg); el("text", {x: L - 6, y: y(v) + 3, "text-anchor": "end"}, svg).textContent = es(v) + "%"; }
+  yrs.forEach(a => { if (a % 2 === 1) el("text", {x: x(a), y: Hh - 6, "text-anchor": "middle"}, svg).textContent = a; });
+  const tip = tipFor(box);
+  [["Pesquera", "--fleet", "Flota"], ["Manufacturera", "--plant", "Plantas"]].forEach(([t, c, lab]) => {
+    const s = D.anual.filter(r => r.t === t);
+    let d = "", pen = false; s.forEach(r => { if (r.mo === null) { pen = false; return; } d += (pen ? "L" : "M") + x(r.a).toFixed(1) + " " + y(r.mo).toFixed(1) + " "; pen = true; });
+    el("path", {d, fill: "none", stroke: css(c), "stroke-width": 2}, svg);
+    s.forEach(r => { if (r.mo === null) return; const pt = el("circle", {cx: x(r.a), cy: y(r.mo), r: 4, fill: css(c), stroke: css("--panel"), "stroke-width": 2}, svg); const h = el("circle", {cx: x(r.a), cy: y(r.mo), r: 11, fill: "transparent"}, svg); h.addEventListener("pointerenter", () => { const sc = box.clientWidth / W; placeTip(tip, box, x(r.a) * sc, y(r.mo) * sc, `<b>${lab} ${r.a}</b><br>Margen op. ${es(r.mo, 1)}%<br>Precio ${usd(r.pp)}/t<br>${r.n} empresas`); }); h.addEventListener("pointerleave", () => tip.hidden = true); });
+    const lst = s[s.length - 1]; el("text", {x: x(lst.a) + 8, y: y(lst.mo) + (t === "Pesquera" ? -6 : 10), style: `fill:${css("--ink2")};font-size:11px`}, svg).textContent = lab;
+  });
+  const p15 = D.anual.find(r => r.t === "Pesquera" && r.a === 2015);
+  el("text", {x: x(2015) + 8, y: y(p15.mo) + 4, style: `fill:${css("--ink2")}`}, svg).textContent = `2015: ${usd(p15.pp)}/t`;
+}
+
+// ---- gráfico 3: precio tras episodio
+function chartEpis() {
+  const box = $("cEpis"); box.innerHTML = "";
+  const W = 520, Hh = 270, L = 48, R = 10, T = 22, B = 26;
+  const svg = el("svg", {viewBox: `0 0 ${W} ${Hh}`, role: "img", "aria-label": "Precio medio por episodio ENSO"}, box);
+  const ord = [["La Niña", "--nina"], ["Neutro", "--neutro"], ["El Niño", "--nino"]], ymax = 2000, y = v => T + (1 - v / ymax) * (Hh - T - B);
+  for (let v = 0; v <= 2000; v += 500) { el("line", {x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: css("--rule")}, svg); el("text", {x: L - 6, y: y(v) + 3, "text-anchor": "end"}, svg).textContent = es(v); }
+  const bw = 90, step = (W - L - R) / 3;
+  ord.forEach(([k, c], i) => { const v = D.episodios[k].media, cx = L + step * (i + .5); el("path", {d: `M${cx - bw / 2} ${y(0)} V${y(v) + 4} q0 -4 4 -4 H${cx + bw / 2 - 4} q4 0 4 4 V${y(0)} Z`, fill: css(c)}, svg); el("text", {x: cx, y: y(v) - 7, "text-anchor": "middle", style: `fill:${css("--ink")};font-size:12px;font-weight:600`}, svg).textContent = usd(v); el("text", {x: cx, y: Hh - 8, "text-anchor": "middle", style: `fill:${css("--ink2")};font-size:11px`}, svg).textContent = `${k} (${D.episodios[k].n} m)`; });
+  el("line", {x1: L, x2: W - R, y1: y(be.precio_breakeven_usd_t), y2: y(be.precio_breakeven_usd_t), stroke: css("--fleet"), "stroke-width": 1.2}, svg);
+  el("text", {x: L + 4, y: y(be.precio_breakeven_usd_t) + 13, "text-anchor": "start", style: `fill:${css("--fleet")}`}, svg).textContent = "equilibrio flota";
+}
+
+// ---- simulador
+function sim() {
+  const P = +$("sl").value; $("slv").textContent = usd(P) + "/t";
+  const fuera = P < 1170 || P > 2130;
+  [["simP", "Pesquera", "--fleet", "Armadores (flota)"], ["simM", "Manufacturera", "--plant", "Plantas procesadoras"]].forEach(([id, t, c, lab]) => {
+    const m = D.modelos[t], mo = (m.b0 + m.b1 * P / 100) * 100, delta = m.b1 * (P - D.p_base) / 100;
+    const f = D.firmas[t], loss = f.filter(v => v + delta < 0).length / f.length * 100, imp = delta * D.ingresos[t] / 1e6;
+    $(id).innerHTML = `<h3><i style="background:var(${c})"></i>${lab}</h3>
+      <div class="row"><span>Margen operativo esperado</span><b>${es(mo, 1)}% <span class="pill ${mo < 0 ? "bad" : "ok"}">${mo < 0 ? "pérdida" : "positivo"}</span></b></div>
+      <div class="row"><span>Empresas en pérdida operativa</span><b>${es(loss, 0)}%</b></div>
+      <div class="row"><span>Utilidad operativa vs. ${D.anio_base}</span><b>${imp >= 0 ? "+" : "−"}USD ${es(Math.abs(imp), 0)} M</b></div>
+      ${fuera ? `<div class="row"><span style="color:var(--warn)">Fuera del rango observado</span><span></span></div>` : ""}`;
+  });
+}
+$("sl").addEventListener("input", sim);
+
+function drawAll() { chartPrecio(); chartMargen(); chartEpis(); sim(); }
+drawAll();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
+new MutationObserver(drawAll).observe(document.documentElement, {attributes: true, attributeFilter: ["data-theme"]});
+</script>

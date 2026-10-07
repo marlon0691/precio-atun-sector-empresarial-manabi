@@ -1,0 +1,41 @@
+{
+  "fuente": "SUPERCIAS panel bruto",
+  "total_registros": 2983,
+  "anios_disponibles": [
+    2010,
+    2011,
+    2012,
+    2013,
+    2014,
+    2015,
+    2016,
+    2017,
+    2018,
+    2019,
+    2020,
+    2021,
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "n_empresas": 336,
+  "pct_nulos": {
+    "ingresos_ordinarios": 32.7,
+    "costos_gastos_totales": 4.6,
+    "utilidad_antes_part_ir": 4.6
+  },
+  "ROCC": {
+    "Reliable": "SUPERCIAS = regulador oficial | Thai Union = empresa cotizada SET | NOAA = agencia federal EE.UU.",
+    "Original": "Balances tal como los presentan las compañías; 2 formularios (NIIF jerárquico y casilleros) no comparables código a código",
+    "Comprehensive": "Período 2010–2025",
+    "Current": "SUPERCIAS: rezago ~4–16 meses | Bangkok: mensual | NOAA: mensual"
+  },
+  "empresas_serie_completa": 66,
+  "pct_series_completas": 19.6,
+  "suficiencia_estadistica": {
+    "OLS_pooled": "SUFICIENTE",
+    "Panel_efectos_fijos": "SUFICIENTE",
+    "Variacion_temporal_del_precio": "LIMITADA (16 años): el precio es común a todas las empresas; la identificación del efecto precio descansa en ~16 observaciones temporales"
+  }
+}

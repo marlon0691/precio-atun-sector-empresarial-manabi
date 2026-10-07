@@ -1,0 +1,11 @@
+tipo,metrica,n_empresa_anio,r_pearson,p_pearson,r_spearman,p_spearman,n_anios,r_agregado,p_agregado,direccion
+Manufacturera,margen_bruto,375,0.0541,0.2963,0.0679,0.1895,14,0.0767,0.7943,↑ positiva
+Manufacturera,margen_operativo,397,-0.034,0.4993,0.0609,0.226,14,0.5435,0.0445,↑ positiva
+Manufacturera,margen_neto,422,-0.0524,0.2829,0.0434,0.3743,15,0.5765,0.0245,↑ positiva
+Manufacturera,roa,422,-0.0217,0.6563,0.0331,0.4979,15,0.6471,0.0091,↑ positiva
+Manufacturera,roe,405,0.0201,0.6869,0.0507,0.3084,15,0.6431,0.0097,↑ positiva
+Pesquera,margen_bruto,1056,0.0891,0.0038,0.0689,0.0252,14,0.504,0.0661,↑ positiva
+Pesquera,margen_operativo,1206,0.1048,0.0003,0.1349,0.0,14,0.8576,0.0001,↑ positiva
+Pesquera,margen_neto,1270,0.0932,0.0009,0.134,0.0,15,0.8499,0.0001,↑ positiva
+Pesquera,roa,1270,0.042,0.1349,0.117,0.0,15,0.8344,0.0001,↑ positiva
+Pesquera,roe,1223,0.0778,0.0065,0.1138,0.0001,15,0.8138,0.0002,↑ positiva

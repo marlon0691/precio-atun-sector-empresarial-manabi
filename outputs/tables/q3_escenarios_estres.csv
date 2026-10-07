@@ -1,0 +1,17 @@
+tipo,escenario,precio_usd_t,margen_op_esperado_pct,pi95_inf_pct,pi95_sup_pct,cambio_vs_2025_pp,impacto_utilidad_operativa_musd,pct_empresas_en_perdida,pct_empresas_perdida_2025
+Manufacturera,Mínimo histórico (oct-2019),900,2.23,-0.96,5.42,-2.03,-26.69,32.26,3.23
+Manufacturera,Piso El Niño 2015,1100,2.83,-0.13,5.8,-1.43,-18.76,22.58,3.23
+Manufacturera,Precio promedio 2024,1438,3.85,1.08,6.63,-0.41,-5.36,9.68,3.23
+Manufacturera,Precio promedio 2025,1573,4.26,1.5,7.03,-0.0,-0.01,3.23,3.23
+Manufacturera,Moderado alto (prom. 2013),1800,4.95,2.1,7.79,0.68,8.99,3.23,3.23
+Manufacturera,Severo (prom. 2012),2100,5.85,2.74,8.97,1.59,20.88,0.0,3.23
+Manufacturera,Extremo (pico oct-2017 / sep-2026),2300,6.45,3.07,9.83,2.19,28.81,0.0,3.23
+Manufacturera,Estrés extremo,2500,7.06,3.36,10.75,2.8,36.74,0.0,3.23
+Pesquera,Mínimo histórico (oct-2019),900,-4.3,-8.47,-0.12,-6.62,-74.3,74.04,15.38
+Pesquera,Piso El Niño 2015,1100,-2.33,-6.18,1.52,-4.65,-52.23,68.27,15.38
+Pesquera,Precio promedio 2024,1438,0.99,-2.52,4.51,-1.33,-14.93,39.42,15.38
+Pesquera,Precio promedio 2025,1573,2.32,-1.15,5.79,-0.0,-0.04,16.35,15.38
+Pesquera,Moderado alto (prom. 2013),1800,4.55,1.03,8.08,2.23,25.01,9.62,15.38
+Pesquera,Severo (prom. 2012),2100,7.5,3.68,11.33,5.18,58.12,8.65,15.38
+Pesquera,Extremo (pico oct-2017 / sep-2026),2300,9.47,5.33,13.61,7.15,80.18,7.69,15.38
+Pesquera,Estrés extremo,2500,11.44,6.9,15.97,9.11,102.25,6.73,15.38

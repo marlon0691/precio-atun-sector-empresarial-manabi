@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+.DS_Store
+# Balances SUPERCIAS en formato largo (34 MB) — se regeneran con consolidar_base_atunera.py
+data/raw/supercias/balances_largo.parquet
+data/raw/supercias/*.txt
