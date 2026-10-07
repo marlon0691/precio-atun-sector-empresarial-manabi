@@ -7,7 +7,7 @@ Decisiones metodológicas clave (ver README §Metodología):
   Driscoll-Kraay (robustos a correlación transversal y serial), adecuados con N grande y T=15.
 - Los ratios por empresa se acotan a [-1, 1] y se restringen a empresas con ingresos ≥ USD 100 mil
   (actividad material); los resultados agregados se ponderan por ingresos.
-- 2014: el formulario no reporta 'total costos' para casi ninguna empresa → margen bruto 2014 excluido.
+- 2014: totales del formulario 101 reconstruidos desde el detalle (src/reconstruir_2014.py).
 - Series mensuales: errores HAC (Newey-West, 12 rezagos) por la fuerte autocorrelación del precio y del ONI.
 """
 from __future__ import annotations
@@ -47,7 +47,6 @@ def panel_analitico(df: pd.DataFrame | None = None) -> pd.DataFrame:
     d = df[df.anio.between(2011, 2025) & (df.ingresos >= ING_MIN)].copy()
     for m in METRICAS:
         d[m + "_c"] = d[m].clip(-1, 1)
-    d.loc[d.anio == 2014, "margen_bruto_c"] = np.nan
     d["dp10"] = d["precio_var_yoy_pct"] / 10  # efecto por cada +10% de variación anual del precio
     return d
 
@@ -56,7 +55,6 @@ def agregados(df: pd.DataFrame | None = None) -> pd.DataFrame:
     if df is None:
         df = pd.read_parquet(PROC / "dataset_maestro_manabi.parquet")
     a = agregados_sector(df)
-    a.loc[a.anio == 2014, "margen_bruto_agr"] = np.nan
     a = a[a.anio.between(2011, 2025)].copy()
     a["p100"] = a["precio_prom"] / 100
     a["dp10"] = a["precio_var_yoy_pct"] / 10
@@ -298,7 +296,7 @@ def q3(d: pd.DataFrame, a: pd.DataFrame, res_q1: dict) -> dict:
     perd = d.groupby(["anio", "tipo_empresa"]).agg(n=("ruc", "nunique"), pct_perdida_operativa=("perdida_operativa", "mean"),
                                                    pct_perdida_neta=("perdida_neta", "mean")).reset_index()
     cob = d.groupby(["anio", "tipo_empresa"])["utilidad_antes_part_ir"].apply(lambda x: x.notna().mean()).values
-    perd.loc[cob < 0.5, "pct_perdida_operativa"] = np.nan  # 2014: cuenta no reportada
+    perd.loc[cob < 0.5, "pct_perdida_operativa"] = np.nan  # cuenta no reportada por la mayoría
     perd = perd.merge(a[["anio", "precio_prom", "oni_prom"]].drop_duplicates(), on="anio")
     _save(perd.round(4), "q3_pct_empresas_perdida.csv")
     out["perdidas_anio"] = perd

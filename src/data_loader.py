@@ -193,6 +193,23 @@ def construir_dataset_maestro(verbose: bool = True) -> pd.DataFrame:
     largo = pd.read_parquet(RAW / "balances_largo.parquet")
     cuentas = extraer_cuentas(largo)
     panel = panel.merge(cuentas, on=["anio", "ruc", "tipo_formulario"], how="left")
+
+    # [2b] 2014: los totales del formulario 101 vienen vacíos → se reconstruyen desde el detalle
+    from .reconstruir_2014 import reconstruir
+    rec = reconstruir(largo, 2014)
+    m14 = (panel.anio == 2014) & (panel.tipo_formulario == "casilleros")
+    antes_uai = int(panel.loc[m14, "utilidad_antes_part_ir"].notna().sum())
+    antes_cv = int(panel.loc[m14, "costo_ventas"].notna().sum())
+    panel = panel.merge(rec.drop(columns=["anio"]).add_prefix("r_").rename(columns={"r_ruc": "ruc"}), on="ruc", how="left")
+    fill = m14 & panel["r_ingresos_rec"].gt(0)
+    panel.loc[fill, "ingresos_totales"] = panel.loc[fill, "r_ingresos_rec"]
+    panel.loc[fill & panel["costo_ventas"].isna(), "costo_ventas"] = panel.loc[fill, "r_costo_ventas_rec"]
+    panel.loc[fill & panel["utilidad_antes_part_ir"].isna(), "utilidad_antes_part_ir"] = panel.loc[fill, "r_utilidad_antes_part_ir_rec"]
+    panel = panel.drop(columns=[c for c in panel.columns if c.startswith("r_")])
+    registrar(f"[2b] 2014 reconstruido desde el detalle del formulario 101 (src/reconstruir_2014.py): "
+              f"utilidad antes de part./IR {antes_uai} → {int(panel.loc[m14, 'utilidad_antes_part_ir'].notna().sum())} empresas; "
+              f"costo de ventas {antes_cv} → {int(panel.loc[m14, 'costo_ventas'].notna().sum())}. "
+              "Validación: utilidad reconstruida / (casillero 803 ÷ 0,15) = 1,000 en la mediana (75 empresas)", verbose=verbose)
     registrar(f"[2] Costo de ventas extraído (códigos {COD_COSTO}): disponible en "
               f"{panel.costo_ventas.notna().mean() * 100:.1f}% de registros", verbose=verbose)
 
@@ -243,8 +260,7 @@ def construir_dataset_maestro(verbose: bool = True) -> pd.DataFrame:
     #     se documentan los faltantes.
     for m in ["margen_bruto", "margen_operativo", "roe"]:
         registrar(f"[8] {m}: {df[m].isna().sum():,} nulos — no imputados (decisión conservadora)", verbose=verbose)
-    registrar("[8] 2014 (formulario casilleros): solo ~9% reporta utilidad antes de part./IR y ~7% costo de ventas → "
-              "márgenes bruto/operativo 2014 se excluyen de agregados (regla: cobertura < 50%)", verbose=verbose)
+    registrar("[8] Regla general: si < 50% de las empresas de un año reporta una cuenta, el agregado de ese año queda vacío", verbose=verbose)
 
     # [9] Tamaño y deflactación
     df["tamano_empresa"] = df["activo_total"].apply(clasificar_tamano)
@@ -298,7 +314,7 @@ def agregados_sector(df: pd.DataFrame) -> pd.DataFrame:
     a["margen_bruto_agr"] = (a["gb"] / a["ing_mb"]).where(a["cob_mb"] >= 0.5)
     a["margen_operativo_agr"] = (a["uai"] / a["ing_uai"]).where(a["cob_uai"] >= 0.5)
     a["pct_perdida_operativa"] = a["pct_perdida_operativa"].where(a["cob_uai"] >= 0.5)
-    # Regla: si < 50% de las empresas reporta la cuenta en el año (2014, formulario casilleros), el agregado es NaN
+    # Regla: si < 50% de las empresas reporta la cuenta en el año, el agregado es NaN
     a["margen_neto_agr"] = a["utilidad_neta"] / a["ingresos"]
     a["roa_agr"] = a["utilidad_neta"] / a["activos"]
     a["roe_agr"] = a["utilidad_neta"] / a["patrimonio"]

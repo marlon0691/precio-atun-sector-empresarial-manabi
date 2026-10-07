@@ -97,7 +97,7 @@ def fig2_precio_vs_margen(res):
     for t in ["Manufacturera", "Pesquera"]:
         s = a[a.tipo_empresa == t]
         axes[1].plot(s.anio, s.margen_operativo_agr * 100, "-o", color=C[t], lw=2, ms=5, label=t)
-        axes[1].annotate(t, (s.anio.iloc[-1], s.margen_operativo_agr.iloc[-1] * 100), xytext=(6, 0),
+        axes[1].annotate(t, (s.anio.iloc[-1], s.margen_operativo_agr.iloc[-1] * 100), xytext=(6, 9 if t == "Pesquera" else -9),
                          textcoords="offset points", color=C["ink2"], fontsize=9, va="center")
     axes[1].axhline(0, color=C["breakeven"], lw=1)
     axes[1].set_ylabel("Margen operativo agregado (%)")

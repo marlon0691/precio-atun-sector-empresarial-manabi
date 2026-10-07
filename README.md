@@ -7,7 +7,7 @@
 ---
 
 ## Abstract (EN)
-Using 1,692 firm-year observations (230 tuna firms in Manabí, Ecuador, 2011–2025), monthly Bangkok skipjack prices (2011-01 to 2026-09) and NOAA's ONI, we find that **(i)** fishing-fleet profitability is highly price-elastic: +USD 100/t raises the fleet's aggregate operating margin by ~1.0 pp (R² 0.74). The fleet breaks even near **USD 1,340/t**. **(ii)** Processors are *not* hurt by high price **levels**, since they pass costs through. They are hurt by **fast price increases**: each +10% annual rise cuts their gross margin by ~0.7 pp. **(iii)** Contrary to the scarcity hypothesis, **El Niño is associated with *lower* Bangkok prices**, about USD 430/t below La Niña 7 months later (HAC p<0.001). This fits Lehodey et al. (1997), where the stock is redistributed rather than depleted. However, ONI does not Granger-cause prices: it signals a regime, not a month-ahead forecast. The fleet and the processors face opposite risks. The recommended hedge is a **bilateral price-band (floor/cap) supply contract** between them.
+Using 1,692 firm-year observations (230 tuna firms in Manabí, Ecuador, 2011–2025), monthly Bangkok skipjack prices (2011-01 to 2026-09) and NOAA's ONI, we find that **(i)** fishing-fleet profitability is highly price-elastic: +USD 100/t raises the fleet's aggregate operating margin by ~0.94 pp (R² 0.71). The fleet breaks even near **USD 1,310/t**. **(ii)** Processors are *not* hurt by high price **levels**, since they pass costs through. They are hurt by **fast price increases**: each +10% annual rise cuts their gross margin by ~0.66 pp. **(iii)** Contrary to the scarcity hypothesis, **El Niño is associated with *lower* Bangkok prices**, about USD 430/t below La Niña 7 months later (HAC p<0.001). This fits Lehodey et al. (1997), where the stock is redistributed rather than depleted. However, ONI does not Granger-cause prices: it signals a regime, not a month-ahead forecast. The fleet and the processors face opposite risks. The recommended hedge is a **bilateral price-band (floor/cap) supply contract** between them.
 
 ---
 
@@ -20,9 +20,9 @@ Using 1,692 firm-year observations (230 tuna firms in Manabí, Ecuador, 2011–2
 | # | Pregunta | Respuesta corta | Evidencia |
 |---|---|---|---|
 | 1 | **Rezago óptimo ONI → precio Bangkok** | **7 meses** (correlación −0,39). La señal es de *régimen*, no un pronóstico mes a mes | CCF; Granger no significativo (p mín 0,17); la correlación pre-blanqueada ≈ 0 |
-| 2 | **Precio de quiebre** | **Flota: USD 1.340/t** (IC95 1.210–1.460). **Plantas:** su margen operativo agregado nunca fue negativo en 2011–2025; no hay quiebre dentro del rango observado | Regresión del margen operativo agregado sobre el precio (HAC) |
-| 3 | **Sensibilidad a +USD 100/t** | Flota: **+0,98 pp** de margen operativo (IC95 0,66–1,31). Plantas: **+0,30 pp** (IC95 0,05–0,55) | Serie agregada 2011–2025 |
-| 3b | **Sensibilidad de las plantas a la *velocidad*** | Cada **+10% de alza anual** → **−0,68 pp de margen bruto** (IC95 −1,11 a −0,25; p=0,002) | Panel con efectos fijos de empresa y errores Driscoll-Kraay |
+| 2 | **Precio de quiebre** | **Flota: USD 1.312/t** (IC95 1.202–1.422). **Plantas:** su margen operativo agregado nunca fue negativo en 2011–2025; no hay quiebre dentro del rango observado | Regresión del margen operativo agregado sobre el precio (HAC) |
+| 3 | **Sensibilidad a +USD 100/t** | Flota: **+0,94 pp** de margen operativo (IC95 0,67–1,21). Plantas: **+0,29 pp** (IC95 0,05–0,53) | Serie agregada 2011–2025 |
+| 3b | **Sensibilidad de las plantas a la *velocidad*** | Cada **+10% de alza anual** → **−0,66 pp de margen bruto** (IC95 −1,20 a −0,12; p=0,016) | Panel con efectos fijos de empresa y errores Driscoll-Kraay |
 | 4 | **El Niño vs. La Niña** | Tras El Niño la tonelada vale **USD 434 menos** (7 meses: USD 1.324 vs. 1.758; IC95 HAC −667 a −201; p<0,001) | ANOVA, Kruskal-Wallis, Welch, Tukey, HAC |
 | 5 | **Cobertura #1 para plantas** | **Contrato de suministro con banda de precio (piso/techo) con armadores**, indexado al Bangkok skipjack | Las dos partes tienen riesgos opuestos y se compensan |
 | 6 | **Cobertura** | **288 empresas** en el dataset maestro (2.086 obs., 2010–2025); **230 empresas / 1.692 obs.** en la econometría (53 plantas, 177 pesqueras), 2011–2025; 188 meses de precio y ONI | |
@@ -43,8 +43,8 @@ Es consistente con **Lehodey et al. (1997)**: El Niño *redistribuye* el barrile
 - El ONI de jul–sep 2026 está en **+2,16**, un El Niño fuerte comparable a 2015 (+2,6) y 2023 (+2,0).
 - El precio no ha seguido el patrón: **USD 2.275/t en septiembre de 2026**. El patrón histórico apunta a **≈ USD 1.370/t hacia marzo de 2027**, con un intervalo de predicción al 95% muy amplio (USD 790–1.950). El precio actual ya está **por encima** de ese intervalo.
 - Lectura: 2026 es atípico y puede haber factores no climáticos detrás (demanda, flota, regulación). Hou et al. (2022) advierten que la relación ENSO–atún es **no estacionaria**.
-- **Plantas:** el promedio 2026 a septiembre (≈ USD 1.846/t) es **+17% vs. 2025**. Por el efecto velocidad, eso implica ≈ **−1,2 pp de margen bruto** este año.
-- **Flota:** si el patrón histórico reaparece en 2027, el precio podría acercarse al equilibrio de ~USD 1.340/t. Es momento de **asegurar un piso**.
+- **Plantas:** el promedio 2026 a septiembre (≈ USD 1.846/t) es **+17% vs. 2025**. Por el efecto velocidad, eso implica ≈ **−1,1 pp de margen bruto** este año.
+- **Flota:** si el patrón histórico reaparece en 2027, el precio podría acercarse al equilibrio de ~USD 1.310/t. Es momento de **asegurar un piso**.
 
 ---
 
@@ -62,7 +62,7 @@ Detalle en [`references/fuentes_datos.md`](references/fuentes_datos.md).
 ### Decisiones clave (auditables en `outputs/tables/log_limpieza_datos.txt`)
 1. **Costo de ventas mapeado por formulario** (NIIF `501/51`; casilleros `797` y `7991`). Los códigos no son comparables entre formularios.
 2. **Empresas inactivas excluidas** (sin activos o sin ingresos: 897 de 2.983 empresa-año, 30,1%).
-3. **2014 excluido** de los márgenes bruto y operativo: menos del 10% de las empresas reporta esas cuentas en ese formulario.
+3. **2014 reconstruido:** en el formulario 101 de 2014 los casilleros de totales (6999, 7991, 7999, 801) vienen vacíos para ~95% de las empresas. Se suman las partidas de detalle (`src/reconstruir_2014.py`). Validación: la utilidad reconstruida coincide con la implícita en la participación de trabajadores (casillero 803 ÷ 0,15) con una razón mediana de 1,000 en 75 empresas. Cobertura 2014: utilidad antes de IR de 8 → 114 empresas; costo de ventas de 3 → 94.
 4. **No se imputan ratios.** Los outliers se marcan; para estimar, los ratios se acotan a [−1, 1] y se exigen ingresos ≥ USD 100 mil.
 5. **Sin efectos fijos de año:** el precio anual es común a todas las empresas y sería perfectamente colineal. Se usan efectos fijos de **empresa** y errores **Driscoll-Kraay**. El efecto precio se identifica con ~15 años, así que la serie agregada (ponderada por ingresos, errores HAC) se reporta en paralelo.
 6. **Series mensuales con errores HAC** (Newey-West, 12 rezagos). La CCF se reporta bruta y **pre-blanqueada** (filtro AR(3) del ONI).
@@ -70,8 +70,8 @@ Detalle en [`references/fuentes_datos.md`](references/fuentes_datos.md).
 
 ### Q1 — Precio ↔ desempeño
 - **Pesqueras (H1b confirmada):** margen bruto, operativo, neto, ROA y ROE suben con el precio (p<0,01 en la serie agregada). Las ventas crecen +4,9% por cada +10% de precio.
-- **Manufactureras (H1a rechazada en niveles):** en la serie agregada, margen operativo +0,30 pp, ROA +0,46 pp y ROE +0,95 pp por cada USD 100/t. El **efecto velocidad** es negativo y significativo tanto en el panel (margen bruto −0,68 pp por +10%) como en la serie agregada (margen operativo −0,43 pp; ROE −1,09 pp).
-- **Asimetría formal:** la sensibilidad de las pesqueras supera a la de las plantas en +0,75 pp por cada USD 100 (interacción, p<0,001).
+- **Manufactureras (H1a rechazada en niveles):** en la serie agregada, margen operativo +0,29 pp, ROA +0,46 pp y ROE +0,95 pp por cada USD 100/t. El **efecto velocidad** es negativo y significativo tanto en el panel (margen bruto −0,66 pp por +10%) como en la serie agregada (margen operativo −0,40 pp; ROE −1,09 pp).
+- **Asimetría formal:** la sensibilidad de las pesqueras supera a la de las plantas en +0,73 pp por cada USD 100 (interacción, p<0,001).
 
 ### Q2 — El Niño ↔ precio
 - **ANOVA** F=30,3 y **Kruskal-Wallis** H=47,7 (ambos p<0,001) con rezago de 7 meses. Tukey HSD en `outputs/tables/q2_tukey_hsd.txt`.
@@ -81,13 +81,13 @@ Detalle en [`references/fuentes_datos.md`](references/fuentes_datos.md).
 ### Q3 — Pérdidas potenciales
 | Escenario (USD/t) | Flota: margen op. esperado | % de empresas de la flota en pérdida | Plantas: margen op. esperado | Impacto en la flota vs. 2025 |
 |---|---|---|---|---|
-| 900 (mín. oct-2019) | −4,3% | 74% | +2,2% | −USD 74 M |
-| 1.100 (El Niño 2015) | −2,3% | 68% | +2,8% | −USD 52 M |
+| 900 (mín. oct-2019) | −3,9% | 74% | +2,4% | −USD 71 M |
+| 1.100 (El Niño 2015) | −2,0% | 66% | +2,9% | −USD 50 M |
 | 1.573 (prom. 2025) | +2,3% | 16% | +4,3% | — |
-| 2.300 (pico 2017 / sep-2026) | +9,5% | 8% | +6,5% | +USD 80 M |
+| 2.300 (pico 2017 / sep-2026) | +9,3% | 8% | +6,4% | +USD 77 M |
 
-- **VaR 95% del margen operativo (empresa-año):** plantas −2,7%; flota −17,7%. La flota tiene una cola mucho más pesada.
-- **Plantas, shock de velocidad:** un alza de +30% en el año equivale a ≈ −2,0 pp de margen bruto, unos **−USD 27 M** sobre las ventas de 2025.
+- **VaR 95% del margen operativo (empresa-año):** plantas −3,3%; flota −18,0%. La flota tiene una cola mucho más pesada.
+- **Plantas, shock de velocidad:** un alza de +30% en el año equivale a ≈ −2,0 pp de margen bruto, unos **−USD 26 M** sobre las ventas de 2025.
 
 Todas las tablas están en [`outputs/tables/`](outputs/tables) y los hallazgos en formato máquina en `outputs/tables/hallazgos_clave.json`.
 
@@ -113,7 +113,7 @@ Todas las tablas están en [`outputs/tables/`](outputs/tables) y los hallazgos e
 | Servicio de coberturas del BCE | ✖ Solo empresas públicas | — | — | — |
 
 ### Recomendación #1 — contrato de banda de precio
-La **flota** pierde cuando el precio cae bajo ~USD 1.340/t. Las **plantas** sufren cuando el precio **sube rápido**. Un contrato anual con **piso ≈ USD 1.350** y **techo ≈ USD 1.900–2.000**, liquidado mensualmente contra el precio Bangkok publicado por Thai Union, reduce la cola de ambos. No requiere mercado de derivados.
+La **flota** pierde cuando el precio cae bajo ~USD 1.310/t. Las **plantas** sufren cuando el precio **sube rápido**. Un contrato anual con **piso ≈ USD 1.350** y **techo ≈ USD 1.900–2.000**, liquidado mensualmente contra el precio Bangkok publicado por Thai Union, reduce la cola de ambos. No requiere mercado de derivados.
 
 ### Protocolo de alerta ONI (revisado con la evidencia)
 | Señal ONI (NOAA, mensual) | Patrón histórico del precio | Armadores | Plantas |

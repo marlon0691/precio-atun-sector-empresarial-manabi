@@ -52,7 +52,7 @@ NOTEBOOKS = {
         ("md", """### Hallazgos ROCC
 - **Reliable:** regulador oficial (SUPERCIAS), empresa cotizada (Thai Union, SET), agencia federal (NOAA). ✔
 - **Original:** dos formularios no comparables código a código (NIIF jerárquico vs. casilleros 101) → se usan variables homologadas y se mapea el costo de ventas por formulario (501/51; 797; 7991).
-- **Comprehensive:** 336 empresas, 2010–2025. **2014** solo reporta utilidad antes de IR en ~9% y costo de ventas en ~7% → márgenes bruto/operativo 2014 excluidos.
+- **Comprehensive:** 336 empresas, 2010–2025. **2014:** los totales del formulario 101 vienen vacíos (~95% de empresas) → se reconstruyen desde el detalle (`src/reconstruir_2014.py`), validado contra el casillero 803.
 - **Current:** balances 2025 ya disponibles; precio a sep-2026; ONI a ago-2026 (JAS).
 - **Suficiencia:** muchas empresas, pero el precio es **común a todas** → la variación identificadora son ~15 años. Toda inferencia sobre el efecto precio se trata como evidencia de series cortas."""),
     ],
@@ -75,9 +75,9 @@ NOTEBOOKS = {
         ("code", "display(q1['agr'].round(3))\nprint('Test de asimetría (panel, margen operativo):', {k: round(v,4) for k,v in q1['asimetria'].items()})"),
         ("code", "display(Image('../outputs/figures/fig2_precio_vs_margen_operativo.png', width=900))\ndisplay(Image('../outputs/figures/fig3_scatter_precio_margen_por_tipo.png', width=900))"),
         ("md", """### Lectura
-- **H1b (pesqueras) — CONFIRMADA y fuerte.** Margen operativo agregado ≈ +1,0 pp por cada +USD 100/t (R² ≈ 0,74). Las ventas crecen ≈ +4,9% por cada +10% de precio.
-- **H1a (manufactureras) — RECHAZADA en niveles.** El margen de las plantas **no cae** cuando el precio es alto (+0,3 pp por USD 100, p≈0,02 agregado; no significativo a nivel empresa): el costo se traslada al precio de la conserva/lomo.
-- **Pero sí hay un efecto de VELOCIDAD:** a nivel empresa, cada +10% de **alza anual** del precio reduce el margen bruto de las plantas ≈ 0,7 pp (p≈0,002). El daño es transitorio: ocurre el año del salto, mientras los contratos de venta se reajustan.
+- **H1b (pesqueras) — CONFIRMADA y fuerte.** Margen operativo agregado ≈ +0,94 pp por cada +USD 100/t (R² ≈ 0,71). Las ventas crecen ≈ +4,9% por cada +10% de precio.
+- **H1a (manufactureras) — RECHAZADA en niveles.** El margen de las plantas **no cae** cuando el precio es alto (+0,29 pp por USD 100, p≈0,02 agregado; no significativo a nivel empresa): el costo se traslada al precio de la conserva/lomo.
+- **Pero sí hay un efecto de VELOCIDAD:** a nivel empresa, cada +10% de **alza anual** del precio reduce el margen bruto de las plantas ≈ 0,66 pp (p≈0,016). El daño es transitorio: ocurre el año del salto, mientras los contratos de venta se reajustan.
 - La diferencia de sensibilidad entre tipos es significativa (interacción tipo×precio, p<0,001)."""),
     ],
     "05_analyze_q2_elnino_vs_precio": [
@@ -104,11 +104,11 @@ NOTEBOOKS = {
         ("code", "display(q3['perdidas_anio'].pivot(index='anio', columns='tipo_empresa', values='pct_perdida_operativa').round(3))\nprint(q3['shock_velocidad_manuf'])"),
         ("code", "display(Image('../outputs/figures/fig6_escenarios_estres.png', width=950))"),
         ("md", """### Lectura
-- **Armadores:** precio de quiebre operativo ≈ **USD 1.340/t** (IC95 ≈ 1.210–1.460), dentro del rango observado. Los años con margen operativo agregado negativo (2015, 2019) son justamente los de precio < USD 1.250.
-  Con USD 900/t, ~74% de las empresas tendría pérdida operativa; impacto ≈ −USD 74 M en utilidad operativa frente a 2025.
+- **Armadores:** precio de quiebre operativo ≈ **USD 1.310/t** (IC95 ≈ 1.200–1.420), dentro del rango observado. Los años con margen operativo agregado negativo (2015, 2019) son justamente los de precio < USD 1.250.
+  Con USD 900/t, ~74% de las empresas tendría pérdida operativa; impacto ≈ −USD 71 M en utilidad operativa frente a 2025.
 - **Plantas:** el margen operativo agregado **nunca** fue negativo en 2011–2025. El quiebre extrapolado (≈ USD 160/t) está fuera de rango y no es interpretable.
-  Su riesgo real es de **velocidad**: un salto de +30% en el año implica ≈ −2 pp de margen bruto (≈ −USD 27 M sobre las ventas de 2025).
-- **VaR 95% (empresa-año):** margen operativo −2,7% en plantas vs −17,7% en flota. La flota tiene una cola mucho más pesada."""),
+  Su riesgo real es de **velocidad**: un salto de +30% en el año implica ≈ −2 pp de margen bruto (≈ −USD 26 M sobre las ventas de 2025).
+- **VaR 95% (empresa-año):** margen operativo −3,3% en plantas vs −18,0% en flota. La flota tiene una cola mucho más pesada."""),
     ],
     "07_share_act_visualizaciones_hedging": [
         ("md", "# 07 · SHARE & ACT — Visualizaciones y opciones de cobertura"),
@@ -120,14 +120,14 @@ NOTEBOOKS = {
 
 ## Recomendación #1
 **Contrato de suministro con banda de precio (piso/techo) entre plantas y armadores de Manta**, indexado al Bangkok skipjack:
-- La flota necesita un **piso** (pierde bajo ~USD 1.340/t) y la planta necesita un **techo** o suavizar alzas rápidas (−0,7 pp de margen bruto por cada +10% de alza anual).
+- La flota necesita un **piso** (pierde bajo ~USD 1.310/t) y la planta necesita un **techo** o suavizar alzas rápidas (−0,66 pp de margen bruto por cada +10% de alza anual).
 - Los riesgos son opuestos y se compensan: es una **cobertura natural** que no exige mercados de derivados.
 
 ## Protocolo ONI (revisado con la evidencia)
 | Señal | Lectura histórica | Armadores | Plantas |
 |---|---|---|---|
 | ONI ≥ +0,5 dos meses | precio tiende a bajar en 6–9 m | activar piso / vender forward | no sobre-comprar; esperar |
-| ONI ≥ +1,0 | precio medio tras El Niño ≈ USD 1.320 | piso cerca del equilibrio (~1.340) | contratar volumen escalonado |
+| ONI ≥ +1,0 | precio medio tras El Niño ≈ USD 1.320 | piso cerca del equilibrio (~1.310) | contratar volumen escalonado |
 | ONI ≤ −0,5 | precio tiende a subir (≈ USD 1.760) | capturar precio alto | asegurar techo **antes** del alza |"""),
     ],
 }

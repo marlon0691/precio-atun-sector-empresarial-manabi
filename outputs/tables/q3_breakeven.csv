@@ -1,3 +1,3 @@
 tipo,precio_breakeven_usd_t,ic95_inf,ic95_sup,efecto_100usd_pp,efecto_ic95_inf,efecto_ic95_sup,r2,precio_min_observado,precio_max_observado,dentro_rango_observado,anios_con_margen_operativo_negativo
-Manufacturera,160.2198,-1012.1863,1332.6259,0.3016,0.049,0.5543,0.2954,1170.4167,2126.9167,False,
-Pesquera,1336.9526,1213.0989,1460.8064,0.9833,0.6559,1.3106,0.7355,1170.4167,2126.9167,True,"2015, 2019"
+Manufacturera,78.3271,-1106.926,1263.5803,0.2881,0.0502,0.5261,0.2827,1170.4167,2126.9167,False,
+Pesquera,1312.2211,1202.3274,1422.1148,0.9424,0.6704,1.2144,0.7084,1170.4167,2126.9167,True,"2015, 2019"

@@ -12,48 +12,48 @@
   },
   "q1": {
     "Manufacturera": {
-      "margen_op_agr_por_100usd_pp": 0.3016,
+      "margen_op_agr_por_100usd_pp": 0.2881,
       "ic95": [
-        0.049,
-        0.5543
+        0.0502,
+        0.5261
       ],
-      "p": 0.0193,
-      "r2": 0.2954,
-      "margen_bruto_fe_por_100usd_pp": 0.597,
+      "p": 0.0176,
+      "r2": 0.2827,
+      "margen_bruto_fe_por_100usd_pp": 0.5965,
       "margen_bruto_fe_ic95": [
-        -0.0481,
-        1.2421
+        -0.1444,
+        1.3373
       ],
-      "margen_bruto_fe_p": 0.0696,
-      "margen_bruto_fe_por_10pct_var_pp": -0.6821,
-      "margen_bruto_fe_var_p": 0.002,
+      "margen_bruto_fe_p": 0.1142,
+      "margen_bruto_fe_por_10pct_var_pp": -0.6612,
+      "margen_bruto_fe_var_p": 0.016,
       "ventas_por_10pct_var_precio_pct": 2.9696,
       "ventas_p": 0.0006
     },
     "Pesquera": {
-      "margen_op_agr_por_100usd_pp": 0.9833,
+      "margen_op_agr_por_100usd_pp": 0.9424,
       "ic95": [
-        0.6559,
-        1.3106
+        0.6704,
+        1.2144
       ],
       "p": 0.0,
-      "r2": 0.7355,
-      "margen_bruto_fe_por_100usd_pp": 0.7978,
+      "r2": 0.7084,
+      "margen_bruto_fe_por_100usd_pp": 0.8024,
       "margen_bruto_fe_ic95": [
-        0.4227,
-        1.1729
+        0.4554,
+        1.1494
       ],
       "margen_bruto_fe_p": 0.0,
-      "margen_bruto_fe_por_10pct_var_pp": -0.3373,
-      "margen_bruto_fe_var_p": 0.3003,
+      "margen_bruto_fe_por_10pct_var_pp": -0.2537,
+      "margen_bruto_fe_var_p": 0.2732,
       "ventas_por_10pct_var_precio_pct": 4.8698,
       "ventas_p": 0.001
     }
   },
   "q1_asimetria": {
-    "coef_precio_manuf_pp": -0.10572023675320573,
-    "coef_diferencial_pesquera_pp": 0.7469124868138004,
-    "p_diferencial": 6.187319621075993e-05
+    "coef_precio_manuf_pp": -0.1042736047020112,
+    "coef_diferencial_pesquera_pp": 0.731000826226974,
+    "p_diferencial": 2.263643861843967e-05
   },
   "q2": {
     "lag_optimo_meses": 7,
@@ -100,26 +100,26 @@
   "q3": {
     "breakeven": {
       "Manufacturera": {
-        "precio_breakeven_usd_t": 160.2198,
-        "ic95_inf": -1012.1863,
-        "ic95_sup": 1332.6259,
-        "efecto_100usd_pp": 0.3016,
-        "efecto_ic95_inf": 0.049,
-        "efecto_ic95_sup": 0.5543,
-        "r2": 0.2954,
+        "precio_breakeven_usd_t": 78.3271,
+        "ic95_inf": -1106.926,
+        "ic95_sup": 1263.5803,
+        "efecto_100usd_pp": 0.2881,
+        "efecto_ic95_inf": 0.0502,
+        "efecto_ic95_sup": 0.5261,
+        "r2": 0.2827,
         "precio_min_observado": 1170.4167,
         "precio_max_observado": 2126.9167,
         "dentro_rango_observado": false,
         "anios_con_margen_operativo_negativo": ""
       },
       "Pesquera": {
-        "precio_breakeven_usd_t": 1336.9526,
-        "ic95_inf": 1213.0989,
-        "ic95_sup": 1460.8064,
-        "efecto_100usd_pp": 0.9833,
-        "efecto_ic95_inf": 0.6559,
-        "efecto_ic95_sup": 1.3106,
-        "r2": 0.7355,
+        "precio_breakeven_usd_t": 1312.2211,
+        "ic95_inf": 1202.3274,
+        "ic95_sup": 1422.1148,
+        "efecto_100usd_pp": 0.9424,
+        "efecto_ic95_inf": 0.6704,
+        "efecto_ic95_sup": 1.2144,
+        "r2": 0.7084,
         "precio_min_observado": 1170.4167,
         "precio_max_observado": 2126.9167,
         "dentro_rango_observado": true,
@@ -127,13 +127,13 @@
       }
     },
     "shock_velocidad_manuf": {
-      "coef_pp_por_10pct": -0.6821,
+      "coef_pp_por_10pct": -0.6612,
       "ic95": [
-        -1.1124,
-        -0.2519
+        -1.1982,
+        -0.1241
       ],
-      "p_value": 0.002,
-      "impacto_musd_shock_30pct": -26.894888759258397
+      "p_value": 0.016,
+      "impacto_musd_shock_30pct": -26.0708113878048
     },
     "precio_base": 1573.3333333333333,
     "anio_base": 2025
